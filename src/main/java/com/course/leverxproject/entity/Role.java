@@ -1,9 +1,11 @@
 package com.course.leverxproject.entity;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="role")
+@Table(name="roles")
+@NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,7 +13,7 @@ public class Role {
     private int id;
 
     @Column(name="role_name")
-    private String role_name;
+    private String name;
 
 
 }

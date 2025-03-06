@@ -1,4 +1,13 @@
 package com.course.leverxproject.dto.user;
 
-public class UserResponseDTO {
+import java.time.LocalDateTime;
+
+
+public record UserResponseDTO(
+        String firstName,
+        String lastName,
+        String email,
+        LocalDateTime createdAt
+
+) {
 }
