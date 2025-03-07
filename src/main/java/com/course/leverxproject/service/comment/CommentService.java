@@ -17,4 +17,6 @@ public interface CommentService {
     CommentResponseDTO getComment(int commentId);
 
     List<CommentResponseDTO> getComments(int userId);
+
+    void approveComment(int commentId);
 }

@@ -10,11 +10,14 @@ import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.repository.CommentRepository;
 import com.course.leverxproject.repository.UserRepository;
 import com.course.leverxproject.service.auth.AuthService;
+import com.course.leverxproject.service.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -24,11 +27,14 @@ public class CommentServiceImpl implements CommentService {
 
     private final AuthService authService;
 
-    public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository, AuthService authService) {
+    private final UserService userService;
+
+    public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository, AuthService authService, UserService userService) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
 
         this.authService = authService;
+        this.userService = userService;
     }
 
 
@@ -47,6 +53,7 @@ public class CommentServiceImpl implements CommentService {
                 LocalDateTime.now(),
                 false
         );
+
         commentRepository.save(comment);
         return new CommentResponseDTO(
                 comment.getMessage(),
@@ -111,5 +118,15 @@ public class CommentServiceImpl implements CommentService {
                         comment.getApproved()
 
                 )).toList();
+    }
+
+    @Override
+    public void approveComment(int commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new CommentNotFoundException("Comment with id " + commentId + " not found."));
+
+        comment.setApproved(true);
+        commentRepository.save(comment);
+        userService.updateAverage(comment.getSeller().getId());
+
     }
 }

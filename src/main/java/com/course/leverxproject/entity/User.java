@@ -35,6 +35,11 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+
+    @Column(name="rating")
+    private double rating;
+
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -52,9 +57,6 @@ public class User {
         roles.add(role);
     }
 
-    public String getEmail() {
-        return email;
-    }
 
     public User(String firstName, String lastName, String password, String email, LocalDateTime createdAt, Set<Role> roles) {
         this.firstName = firstName;

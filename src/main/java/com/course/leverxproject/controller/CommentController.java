@@ -57,5 +57,11 @@ public class CommentController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    //TODO only for admins
+    @PutMapping("/comments/{commentId}/approved")
+    private ResponseEntity<Void> approveComment(@PathVariable int commentId) {
+        commentService.approveComment(commentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
