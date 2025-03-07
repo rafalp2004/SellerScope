@@ -41,4 +41,22 @@ public class AuthServiceImpl implements AuthService {
 
         return new UserResponseDTO(seller.getFirstName(), seller.getLastName(), seller.getEmail(), LocalDateTime.now());
     }
+
+    @Override
+    public User createAnonymous() {
+        Role role = roleRepository.findByName("ROLE_ANONYMOUS").orElseThrow(() -> new RoleNotFoundException("Role not found"));
+        User anonymousUser = new User(
+                "Anonymous",
+                "",
+                "",
+                "",
+                LocalDateTime.now(),
+                Set.of(role)
+
+        );
+        userRepository.save(anonymousUser);
+        return anonymousUser;
+    }
+
+
 }

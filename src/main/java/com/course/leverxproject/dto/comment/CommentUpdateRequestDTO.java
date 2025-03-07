@@ -1,4 +1,7 @@
 package com.course.leverxproject.dto.comment;
 
-public record CommentUpdateRequestDTO() {
+public record CommentUpdateRequestDTO(
+        String message,
+        short rate
+) {
 }
