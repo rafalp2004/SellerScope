@@ -99,8 +99,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentResponseDTO> getComments(int userId) {
-        List<Comment> commets = commentRepository.findAllBySellerId(userId);
-        return commets
+        List<Comment> comments = commentRepository.findAllBySellerId(userId);
+        return comments
                 .stream()
                 .map(comment -> new CommentResponseDTO(
                         comment.getMessage(),
