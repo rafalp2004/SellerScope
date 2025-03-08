@@ -14,7 +14,7 @@ public interface GameObjectService {
 
     GameObjectResponseDTO getById(int id);
 
-    List<GameObjectResponseDTO> getAll();
-
     void deleteById(int id);
+
+    List<GameObjectResponseDTO> getAll(int page, int size, String sortBy, String sortDir);
 }

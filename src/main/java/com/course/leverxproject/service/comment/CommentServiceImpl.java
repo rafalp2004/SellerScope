@@ -12,6 +12,10 @@ import com.course.leverxproject.repository.UserRepository;
 import com.course.leverxproject.service.auth.AuthService;
 import com.course.leverxproject.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -105,8 +109,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDTO> getComments(int userId) {
-        List<Comment> comments = commentRepository.findAllBySellerId(userId);
+    public List<CommentResponseDTO> getComments(int userId, int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Comment> comments = commentRepository.findAllBySellerId(userId, pageable);
         return comments
                 .stream()
                 .map(comment -> new CommentResponseDTO(

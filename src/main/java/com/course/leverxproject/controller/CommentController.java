@@ -57,8 +57,12 @@ public class CommentController {
 
     @GetMapping("{userId}/comments")
     private ResponseEntity<List<CommentResponseDTO>> getComments(
-            @PathVariable int userId) {
-        List<CommentResponseDTO> responseDTO = commentService.getComments(userId);
+            @PathVariable int userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "rate") String sortBy,
+            @RequestParam(defaultValue = "dsc") String sortDir) {
+        List<CommentResponseDTO> responseDTO = commentService.getComments(userId,page, size, sortBy, sortDir);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 

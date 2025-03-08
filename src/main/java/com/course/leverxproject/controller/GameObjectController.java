@@ -37,8 +37,13 @@ public class GameObjectController {
     }
 
     @GetMapping
-    private ResponseEntity<List<GameObjectResponseDTO>> getObjects(){
-        List<GameObjectResponseDTO> responseDTO = gameObjectService.getAll();
+    private ResponseEntity<List<GameObjectResponseDTO>> getObjects(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "dsc") String sortDir
+    ){
+        List<GameObjectResponseDTO> responseDTO = gameObjectService.getAll(page, size, sortBy, sortDir);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 

@@ -9,6 +9,10 @@ import com.course.leverxproject.exception.gameobject.GameObjectNotFoundException
 import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.repository.GameObjectRepository;
 import com.course.leverxproject.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -79,8 +83,10 @@ public class GameObjectServiceImpl implements GameObjectService {
     }
 
     @Override
-    public List<GameObjectResponseDTO> getAll() {
-        List<GameObject> gameObjectList = gameObjectRepository.findAll();
+    public List<GameObjectResponseDTO> getAll(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<GameObject> gameObjectList = gameObjectRepository.findAll(pageable);
         return gameObjectList.stream().map(gameObject -> new GameObjectResponseDTO(
                 gameObject.getTitle(),
                 gameObject.getText(),

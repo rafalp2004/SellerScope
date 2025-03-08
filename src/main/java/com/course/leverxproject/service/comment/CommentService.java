@@ -16,7 +16,7 @@ public interface CommentService {
 
     CommentResponseDTO getComment(int commentId);
 
-    List<CommentResponseDTO> getComments(int userId);
+    List<CommentResponseDTO> getComments(int userId, int page, int size, String sortBy, String sortDir);
 
     void approveComment(int commentId);
 }

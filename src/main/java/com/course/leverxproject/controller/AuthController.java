@@ -28,5 +28,6 @@ public class AuthController {
         authService.approveSeller(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+    //TODO verifying by email and changing password
 
 }
