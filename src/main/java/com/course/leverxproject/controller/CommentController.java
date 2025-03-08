@@ -3,6 +3,9 @@ package com.course.leverxproject.controller;
 import com.course.leverxproject.dto.comment.CommentCreateRequestDTO;
 import com.course.leverxproject.dto.comment.CommentResponseDTO;
 import com.course.leverxproject.dto.comment.CommentUpdateRequestDTO;
+import com.course.leverxproject.dto.comment.SellerAndCommentDTO;
+import com.course.leverxproject.dto.user.UserResponseDTO;
+import com.course.leverxproject.service.auth.AuthService;
 import com.course.leverxproject.service.comment.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +17,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class CommentController {
 
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
-
     private final CommentService commentService;
+    private final AuthService authService;
+
+    public CommentController(CommentService commentService, AuthService authService) {
+        this.commentService = commentService;
+        this.authService = authService;
+    }
 
     @PostMapping("{userId}/comments")
     private ResponseEntity<CommentResponseDTO> createComment(
@@ -63,5 +68,16 @@ public class CommentController {
         commentService.approveComment(commentId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    // Endpoint for creating user in case when createComment throw SellerNotFoundException
+    @PostMapping("/comments/seller")
+    private ResponseEntity<CommentResponseDTO> createCommentAndSeller(
+            @RequestBody SellerAndCommentDTO sellerAndCommentDTO
+    ) {
+        UserResponseDTO userResponseDTO = authService.createSeller(sellerAndCommentDTO.sellerDTO());
+        CommentResponseDTO responseDTO = commentService.createComment(userResponseDTO.id(), sellerAndCommentDTO.commentDTO());
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    }
+
 
 }

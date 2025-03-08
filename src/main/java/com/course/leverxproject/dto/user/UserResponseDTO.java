@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 
 public record UserResponseDTO(
+        int id,
         String firstName,
         String lastName,
         String email,

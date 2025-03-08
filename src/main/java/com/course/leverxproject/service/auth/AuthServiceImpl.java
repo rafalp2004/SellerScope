@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         );
         userRepository.save(seller);
 
-        return new UserResponseDTO(seller.getFirstName(), seller.getLastName(), seller.getEmail(), LocalDateTime.now());
+        return new UserResponseDTO(seller.getId(),seller.getFirstName(), seller.getLastName(), seller.getEmail(), LocalDateTime.now());
     }
 
     @Override
