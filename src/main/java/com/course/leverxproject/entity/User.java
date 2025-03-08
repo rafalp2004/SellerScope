@@ -49,6 +49,8 @@ public class User {
 
     private Set<Role> roles;
 
+    @Column(name="approved")
+    private Boolean approved;
 
     public void addRole(Role role) {
         if (roles == null) {

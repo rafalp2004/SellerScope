@@ -5,6 +5,7 @@ import com.course.leverxproject.dto.user.UserResponseDTO;
 import com.course.leverxproject.entity.Role;
 import com.course.leverxproject.entity.User;
 import com.course.leverxproject.exception.role.RoleNotFoundException;
+import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.repository.RoleRepository;
 import com.course.leverxproject.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,13 @@ public class AuthServiceImpl implements AuthService {
         );
         userRepository.save(anonymousUser);
         return anonymousUser;
+    }
+
+    @Override
+    public void approveSeller(int userId) {
+        User seller = userRepository.findById(userId).orElseThrow(()->new SellerNotFoundException("Seller with id "+ userId + " not found"));
+        seller.setApproved(true);
+        userRepository.save(seller);
     }
 
 

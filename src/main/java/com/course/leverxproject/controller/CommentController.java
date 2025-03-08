@@ -58,10 +58,10 @@ public class CommentController {
     }
 
     //TODO only for admins
-    @PutMapping("/comments/{commentId}/approved")
+    @PutMapping("/comments/{commentId}/approve")
     private ResponseEntity<Void> approveComment(@PathVariable int commentId) {
         commentService.approveComment(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }
