@@ -1,5 +1,7 @@
 package com.course.leverxproject.controller;
 
+import com.course.leverxproject.dto.user.LoginRequestDTO;
+import com.course.leverxproject.dto.user.LoginResponseDTO;
 import com.course.leverxproject.dto.user.UserCreateRequestDTO;
 import com.course.leverxproject.dto.user.UserResponseDTO;
 import com.course.leverxproject.service.auth.AuthService;
@@ -39,6 +41,19 @@ public class AuthController {
         authService.approveSeller(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    //TODO verifying by email and changing password
+    //TODO  add verifying by email and changing password
+
+    @PostMapping("/login")
+    public ResponseEntity<EntityModel<LoginResponseDTO>> login (@RequestBody LoginRequestDTO loginRequestDTO){
+        LoginResponseDTO userResponseDTO = authService.verify(loginRequestDTO);
+        EntityModel<LoginResponseDTO> entityModel = EntityModel.of(
+                userResponseDTO,
+                linkTo(methodOn(UserController.class).getSeller(userResponseDTO.id())).withSelfRel(),
+                linkTo(methodOn(UserController.class).getSellers(0, 10, "rating", "dsc", null, 0, 10))
+                        .withRel("sellers"));
+
+
+        return new ResponseEntity<>(entityModel, HttpStatus.OK);
+    }
 
 }

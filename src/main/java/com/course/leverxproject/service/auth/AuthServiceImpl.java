@@ -1,5 +1,7 @@
 package com.course.leverxproject.service.auth;
 
+import com.course.leverxproject.dto.user.LoginRequestDTO;
+import com.course.leverxproject.dto.user.LoginResponseDTO;
 import com.course.leverxproject.dto.user.UserCreateRequestDTO;
 import com.course.leverxproject.dto.user.UserResponseDTO;
 import com.course.leverxproject.entity.Role;
@@ -8,7 +10,13 @@ import com.course.leverxproject.exception.role.RoleNotFoundException;
 import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.repository.RoleRepository;
 import com.course.leverxproject.repository.UserRepository;
+import com.course.leverxproject.service.jwt.JwtService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,10 +28,16 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -33,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
         User seller = new User(
                 userDTO.firstName(),
                 userDTO.lastName(),
-                userDTO.password(),
+                encoder.encode(userDTO.password()),
                 userDTO.email(),
                 LocalDateTime.now(),
                 Set.of(role)
@@ -64,6 +78,25 @@ public class AuthServiceImpl implements AuthService {
         User seller = userRepository.findById(userId).orElseThrow(() -> new SellerNotFoundException("Seller with id " + userId + " not found"));
         seller.setApproved(true);
         userRepository.save(seller);
+    }
+
+    @Override
+    public LoginResponseDTO verify(LoginRequestDTO loginRequestDTO) {
+        User user = userRepository.findByEmail(loginRequestDTO.email()).orElseThrow(() -> new SellerNotFoundException("User with email " + loginRequestDTO.email() + " not found"));
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.password()));
+        if(authentication.isAuthenticated()){
+            return new LoginResponseDTO(
+                    jwtService.generateToken(user.getEmail()),
+                    user.getId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getCreatedAt()
+            );
+        } else {
+            throw new AuthenticationCredentialsNotFoundException("Credentials are incorrect");
+        }
     }
 
 
