@@ -9,32 +9,32 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name="game_objects")
+@Table(name = "game_objects")
 @NoArgsConstructor
 public class GameObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="text")
+    @Column(name = "text")
     private String text;
 
-    @Column(name="game")
+    @Column(name = "game")
     @Enumerated(EnumType.STRING)
     private GameEnum game;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
 

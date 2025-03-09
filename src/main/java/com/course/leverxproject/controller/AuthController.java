@@ -17,14 +17,14 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createSeller(@RequestBody UserCreateRequestDTO userDTO){
+    public ResponseEntity<UserResponseDTO> createSeller(@RequestBody UserCreateRequestDTO userDTO) {
         UserResponseDTO userResponseDTO = authService.createSeller(userDTO);
         return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 
     //TODO only for admins
     @PostMapping("{userId}/approve")
-    public ResponseEntity<Void> approveSeller(@PathVariable int userId){
+    public ResponseEntity<Void> approveSeller(@PathVariable int userId) {
         authService.approveSeller(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

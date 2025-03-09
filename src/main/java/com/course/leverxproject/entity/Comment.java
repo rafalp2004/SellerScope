@@ -7,40 +7,37 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="comments")
+@Table(name = "comments")
 @Data
 @NoArgsConstructor
 public class Comment {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+    @Column(name = "message")
+    String message;
+    @Column(name = "rate")
+    short rate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private User author;
 
-  @Column(name="message")
-  String message;
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
 
-  @Column(name="rate")
-  short rate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-  @ManyToOne
-  @JoinColumn(name="author_id")
-  private User author;
+    @Column(name = "approved")
+    private Boolean approved;
 
-  @ManyToOne
-  @JoinColumn(name="seller_id")
-  private User seller;
-
-  @Column(name="created_at")
-  private LocalDateTime createdAt;
-
- @Column(name="approved")
- private Boolean approved;
-
-  public Comment(String message, short rate, User author, User seller, LocalDateTime createdAt, Boolean approved) {
-    this.message = message;
-    this.rate = rate;
-    this.author = author;
-    this.seller = seller;
-    this.createdAt = createdAt;
-    this.approved = approved;
-  }
+    public Comment(String message, short rate, User author, User seller, LocalDateTime createdAt, Boolean approved) {
+        this.message = message;
+        this.rate = rate;
+        this.author = author;
+        this.seller = seller;
+        this.createdAt = createdAt;
+        this.approved = approved;
+    }
 }

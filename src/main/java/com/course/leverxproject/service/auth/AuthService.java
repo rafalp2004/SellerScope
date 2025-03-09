@@ -7,6 +7,7 @@ import com.course.leverxproject.entity.User;
 public interface AuthService {
 
     UserResponseDTO createSeller(UserCreateRequestDTO userDTO);
+
     User createAnonymous();
 
     void approveSeller(int userId);

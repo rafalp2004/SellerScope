@@ -21,17 +21,19 @@ public class GameObjectController {
     }
 
     @PostMapping
-    private ResponseEntity<GameObjectResponseDTO> createObject(@RequestBody GameObjectCreateRequestDTO gameDTO){
+    private ResponseEntity<GameObjectResponseDTO> createObject(@RequestBody GameObjectCreateRequestDTO gameDTO) {
         GameObjectResponseDTO responseDTO = gameObjectService.create(gameDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
+
     @PutMapping("/{id}")
-    private ResponseEntity<GameObjectResponseDTO> updateObject(@PathVariable int id , @RequestBody GameObjectUpdateRequestDTO gameDTO){
-        GameObjectResponseDTO responseDTO = gameObjectService.update(id,gameDTO);
+    private ResponseEntity<GameObjectResponseDTO> updateObject(@PathVariable int id, @RequestBody GameObjectUpdateRequestDTO gameDTO) {
+        GameObjectResponseDTO responseDTO = gameObjectService.update(id, gameDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
+
     @GetMapping("/{id}")
-    private ResponseEntity<GameObjectResponseDTO> getObject(@PathVariable int id ){
+    private ResponseEntity<GameObjectResponseDTO> getObject(@PathVariable int id) {
         GameObjectResponseDTO responseDTO = gameObjectService.getById(id);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
@@ -42,18 +44,16 @@ public class GameObjectController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "dsc") String sortDir
-    ){
+    ) {
         List<GameObjectResponseDTO> responseDTO = gameObjectService.getAll(page, size, sortBy, sortDir);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> deleteObject(@PathVariable int id ){
+    private ResponseEntity<Void> deleteObject(@PathVariable int id) {
         gameObjectService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 
 
 }

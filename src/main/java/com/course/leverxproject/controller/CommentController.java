@@ -62,7 +62,7 @@ public class CommentController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "rate") String sortBy,
             @RequestParam(defaultValue = "dsc") String sortDir) {
-        List<CommentResponseDTO> responseDTO = commentService.getComments(userId,page, size, sortBy, sortDir);
+        List<CommentResponseDTO> responseDTO = commentService.getComments(userId, page, size, sortBy, sortDir);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 

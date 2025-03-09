@@ -4,7 +4,6 @@ import com.course.leverxproject.dto.user.UserResponseDTO;
 import com.course.leverxproject.enums.GameEnum;
 import com.course.leverxproject.service.user.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,15 +29,14 @@ public class UserController {
             @RequestParam(required = false) String game,
             @RequestParam(defaultValue = "0") double minRating,
             @RequestParam(defaultValue = "10") double maxRating
-    ){
+    ) {
+        //In case when we want to filter sellers by game
         GameEnum gameFilter = null;
-
-        if(game != null && !game.isEmpty()){
+        if (game != null && !game.isEmpty()) {
             try {
                 gameFilter = GameEnum.valueOf(game);
-            }
-            catch (IllegalArgumentException e){
-                throw  new IllegalArgumentException(e);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(e);
             }
         }
 
@@ -47,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getSeller(@PathVariable int id){
+    public ResponseEntity<UserResponseDTO> getSeller(@PathVariable int id) {
         UserResponseDTO seller = userService.findById(id);
         return new ResponseEntity<>(seller, HttpStatus.OK);
     }

@@ -4,15 +4,15 @@ import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="roles")
+@Table(name = "roles")
 @NoArgsConstructor
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="role_name")
+    @Column(name = "role_name")
     private String name;
 
 

@@ -47,9 +47,9 @@ public class UserServiceImpl implements UserService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> sellers;
         if (gameFilter != null) {
-            sellers = userRepository.findAllByGame(gameFilter,minRating, maxRating, pageable);
+            sellers = userRepository.findAllByGame(gameFilter, minRating, maxRating, pageable);
         } else {
-            sellers = userRepository.findByRatingBetween(minRating, maxRating ,pageable);
+            sellers = userRepository.findByRatingBetween(minRating, maxRating, pageable);
         }
         return sellers.stream().map(seller ->
                 new UserResponseDTO(

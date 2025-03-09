@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         );
         userRepository.save(seller);
 
-        return new UserResponseDTO(seller.getId(),seller.getFirstName(), seller.getLastName(), seller.getEmail(), LocalDateTime.now());
+        return new UserResponseDTO(seller.getId(), seller.getFirstName(), seller.getLastName(), seller.getEmail(), LocalDateTime.now());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void approveSeller(int userId) {
-        User seller = userRepository.findById(userId).orElseThrow(()->new SellerNotFoundException("Seller with id "+ userId + " not found"));
+        User seller = userRepository.findById(userId).orElseThrow(() -> new SellerNotFoundException("Seller with id " + userId + " not found"));
         seller.setApproved(true);
         userRepository.save(seller);
     }

@@ -1,7 +1,6 @@
 package com.course.leverxproject.entity;
 
 import jakarta.persistence.*;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,7 +35,7 @@ public class User {
     private LocalDateTime createdAt;
 
 
-    @Column(name="rating")
+    @Column(name = "rating")
     private double rating;
 
 
@@ -49,16 +48,8 @@ public class User {
 
     private Set<Role> roles;
 
-    @Column(name="approved")
+    @Column(name = "approved")
     private Boolean approved;
-
-    public void addRole(Role role) {
-        if (roles == null) {
-            roles = new HashSet<>();
-        }
-        roles.add(role);
-    }
-
 
     public User(String firstName, String lastName, String password, String email, LocalDateTime createdAt, Set<Role> roles) {
         this.firstName = firstName;
@@ -67,5 +58,12 @@ public class User {
         this.email = email;
         this.createdAt = createdAt;
         this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.add(role);
     }
 }
