@@ -28,7 +28,7 @@ public class GameObjectServiceImpl implements GameObjectService {
         this.gameObjectRepository = gameObjectRepository;
         this.userRepository = userRepository;
     }
-
+//TODO create mapper object -> DTO
 
     @Override
     public GameObjectResponseDTO create(GameObjectCreateRequestDTO gameDTO) {
@@ -45,8 +45,10 @@ public class GameObjectServiceImpl implements GameObjectService {
         );
         gameObjectRepository.save(gameObject);
         return new GameObjectResponseDTO(
+                gameObject.getId(),
                 gameObject.getTitle(),
                 gameObject.getText(),
+                gameObject.getUser().getId(),
                 gameObject.getUser().getFirstName() + " " + gameObject.getUser().getLastName(),
                 gameObject.getCreatedAt(),
                 gameObject.getUpdatedAt()
@@ -62,8 +64,10 @@ public class GameObjectServiceImpl implements GameObjectService {
         gameObject.setUpdatedAt(LocalDateTime.now());
         gameObjectRepository.save(gameObject);
         return new GameObjectResponseDTO(
+                gameObject.getId(),
                 gameObject.getTitle(),
                 gameObject.getText(),
+                gameObject.getUser().getId(),
                 gameObject.getUser().getFirstName() + " " + gameObject.getUser().getLastName(),
                 gameObject.getCreatedAt(),
                 gameObject.getUpdatedAt()
@@ -74,8 +78,10 @@ public class GameObjectServiceImpl implements GameObjectService {
     public GameObjectResponseDTO getById(int id) {
         GameObject gameObject = gameObjectRepository.findById(id).orElseThrow(() -> new GameObjectNotFoundException("Game object with id " + id + " not found"));
         return new GameObjectResponseDTO(
+                gameObject.getId(),
                 gameObject.getTitle(),
                 gameObject.getText(),
+                gameObject.getUser().getId(),
                 gameObject.getUser().getFirstName() + " " + gameObject.getUser().getLastName(),
                 gameObject.getCreatedAt(),
                 gameObject.getUpdatedAt()
@@ -88,8 +94,10 @@ public class GameObjectServiceImpl implements GameObjectService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<GameObject> gameObjectList = gameObjectRepository.findAll(pageable);
         return gameObjectList.stream().map(gameObject -> new GameObjectResponseDTO(
+                gameObject.getId(),
                 gameObject.getTitle(),
                 gameObject.getText(),
+                gameObject.getUser().getId(),
                 gameObject.getUser().getFirstName() + " " + gameObject.getUser().getLastName(),
                 gameObject.getCreatedAt(),
                 gameObject.getUpdatedAt()

@@ -5,15 +5,24 @@ import com.course.leverxproject.dto.gameObject.GameObjectCreateRequestDTO;
 import com.course.leverxproject.dto.gameObject.GameObjectResponseDTO;
 import com.course.leverxproject.dto.gameObject.GameObjectUpdateRequestDTO;
 import com.course.leverxproject.service.gameObject.GameObjectService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+@Slf4j
 @RestController
 @RequestMapping("/objects")
 public class GameObjectController {
+
     private final GameObjectService gameObjectService;
 
     public GameObjectController(GameObjectService gameObjectService) {
@@ -21,39 +30,73 @@ public class GameObjectController {
     }
 
     @PostMapping
-    private ResponseEntity<GameObjectResponseDTO> createObject(@RequestBody GameObjectCreateRequestDTO gameDTO) {
+    private ResponseEntity<EntityModel<GameObjectResponseDTO>> createObject(@RequestBody GameObjectCreateRequestDTO gameDTO) {
         GameObjectResponseDTO responseDTO = gameObjectService.create(gameDTO);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        log.info(responseDTO.toString());
+        EntityModel<GameObjectResponseDTO> entityModel = EntityModel.of(
+                responseDTO,
+                linkTo(methodOn(GameObjectController.class).getObject(responseDTO.id())).withSelfRel(),
+                linkTo(methodOn(UserController.class).getSeller(responseDTO.userId())).withRel("seller"),
+                linkTo(methodOn(CommentController.class).getComments(responseDTO.userId(), 0, 10, "rate", "dsc")).withRel("userComments")
+        );
+        return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<GameObjectResponseDTO> updateObject(@PathVariable int id, @RequestBody GameObjectUpdateRequestDTO gameDTO) {
+    public ResponseEntity<EntityModel<GameObjectResponseDTO>> updateObject(@PathVariable int id, @RequestBody GameObjectUpdateRequestDTO gameDTO) {
         GameObjectResponseDTO responseDTO = gameObjectService.update(id, gameDTO);
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        EntityModel<GameObjectResponseDTO> entityModel = EntityModel.of(
+                responseDTO,
+                linkTo(methodOn(GameObjectController.class).getObject(id)).withSelfRel(),
+                linkTo(methodOn(UserController.class).getSeller(responseDTO.userId())).withRel("user"),
+                linkTo(methodOn(CommentController.class)
+                        .getComments(responseDTO.userId(), 0, 10, "rate", "dsc"))
+                        .withRel("userComments")
+        );
+        return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<GameObjectResponseDTO> getObject(@PathVariable int id) {
+    public ResponseEntity<EntityModel<GameObjectResponseDTO>> getObject(@PathVariable int id) {
         GameObjectResponseDTO responseDTO = gameObjectService.getById(id);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+        EntityModel<GameObjectResponseDTO> entityModel = EntityModel.of(
+                responseDTO,
+                linkTo(methodOn(GameObjectController.class).getObject(id)).withSelfRel(),
+                linkTo(methodOn(UserController.class).getSeller(responseDTO.userId())).withRel("user"),
+                linkTo(methodOn(CommentController.class)
+                        .getComments(responseDTO.userId(), 0, 10, "rate", "dsc"))
+                        .withRel("userComments")
+        );
+        return new ResponseEntity<>(entityModel, HttpStatus.OK);
     }
 
     @GetMapping
-    private ResponseEntity<List<GameObjectResponseDTO>> getObjects(
+    public ResponseEntity<CollectionModel<EntityModel<GameObjectResponseDTO>>> getObjects(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "dsc") String sortDir
     ) {
         List<GameObjectResponseDTO> responseDTO = gameObjectService.getAll(page, size, sortBy, sortDir);
-        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+
+        List<EntityModel<GameObjectResponseDTO>> entityModelList = responseDTO.stream()
+                .map(gameObject -> EntityModel.of(gameObject,
+                        linkTo(methodOn(GameObjectController.class).getObject(gameObject.id())).withSelfRel(),
+                        linkTo(methodOn(UserController.class).getSeller(gameObject.userId())).withRel("user"),
+                        linkTo(methodOn(CommentController.class)
+                                .getComments(gameObject.userId(), 0, 10, "rate", "dsc"))
+                                .withRel("userComments")
+                ))
+                .collect(Collectors.toList());
+        CollectionModel<EntityModel<GameObjectResponseDTO>> collection = CollectionModel.of(entityModelList,
+                linkTo(methodOn(GameObjectController.class).getObjects(page, size, sortBy, sortDir)).withSelfRel());
+        return new ResponseEntity<>(collection, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> deleteObject(@PathVariable int id) {
+    public ResponseEntity<Void> deleteObject(@PathVariable int id) {
         gameObjectService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 }

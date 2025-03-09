@@ -60,9 +60,11 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
         return new CommentResponseDTO(
+                comment.getId(),
                 comment.getMessage(),
                 comment.getRate(),
                 "Anonymous",
+                comment.getSeller().getId(),
                 comment.getSeller().getFirstName() + " " + comment.getSeller().getLastName(),
                 comment.getCreatedAt(),
                 comment.getApproved()
@@ -78,9 +80,13 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(comment);
 
         return new CommentResponseDTO(
+                comment.getId(),
                 comment.getMessage(),
                 comment.getRate(),
+
                 comment.getAuthor().getFirstName(),
+
+                comment.getSeller().getId(),
                 comment.getSeller().getFirstName() + " " + comment.getSeller().getLastName(),
                 comment.getCreatedAt(),
                 comment.getApproved()
@@ -99,9 +105,12 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " not found."));
 
         return new CommentResponseDTO(
+                comment.getId(),
                 comment.getMessage(),
                 comment.getRate(),
                 comment.getAuthor().getFirstName(),
+
+                comment.getSeller().getId(),
                 comment.getSeller().getFirstName() + " " + comment.getSeller().getLastName(),
                 comment.getCreatedAt(),
                 comment.getApproved()
@@ -116,9 +125,12 @@ public class CommentServiceImpl implements CommentService {
         return comments
                 .stream()
                 .map(comment -> new CommentResponseDTO(
+                        comment.getId(),
                         comment.getMessage(),
                         comment.getRate(),
                         comment.getAuthor().getFirstName(),
+
+                        comment.getSeller().getId(),
                         comment.getSeller().getFirstName() + " " + comment.getSeller().getLastName(),
                         comment.getCreatedAt(),
                         comment.getApproved()
