@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponseDTO> findAll(int page, int size, String sortBy, String sortDir, GameEnum gameFilter, double minRating, double maxRating) {
-        //TODO finding only users with Role Seller
         Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> sellers;
@@ -51,21 +50,19 @@ public class UserServiceImpl implements UserService {
         } else {
             sellers = userRepository.findByRatingBetween(minRating, maxRating, pageable);
         }
-        return sellers.stream().map(seller ->
-                new UserResponseDTO(
-                        seller.getId(),
-                        seller.getFirstName(),
-                        seller.getLastName(),
-                        seller.getEmail(),
-                        seller.getCreatedAt()
-                )
-        ).toList();
+        return sellers.stream()
+                .map(this::userToUserResponseDTO
+                ).toList();
     }
 
     @Override
     public UserResponseDTO findById(int userId) {
         User seller = userRepository.findById(userId).orElseThrow(() -> new SellerNotFoundException("Seller with id " + userId + " not found"));
 
+        return userToUserResponseDTO(seller);
+    }
+
+    private UserResponseDTO userToUserResponseDTO(User seller) {
         return new UserResponseDTO(
                 seller.getId(),
                 seller.getFirstName(),

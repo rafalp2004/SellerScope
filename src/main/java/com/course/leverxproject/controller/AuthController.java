@@ -35,16 +35,15 @@ public class AuthController {
         return new ResponseEntity<>(entityModel, HttpStatus.OK);
     }
 
-    //TODO only for admins
     @PostMapping("{userId}/approve")
     public ResponseEntity<Void> approveSeller(@PathVariable int userId) {
         authService.approveSeller(userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    //TODO  add verifying by email and changing password
+    //TODO add verifying by email and changing password
 
     @PostMapping("/login")
-    public ResponseEntity<EntityModel<LoginResponseDTO>> login (@RequestBody LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<EntityModel<LoginResponseDTO>> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         LoginResponseDTO userResponseDTO = authService.verify(loginRequestDTO);
         EntityModel<LoginResponseDTO> entityModel = EntityModel.of(
                 userResponseDTO,

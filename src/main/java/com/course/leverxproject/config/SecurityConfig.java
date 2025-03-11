@@ -39,11 +39,11 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(HttpMethod.PUT, "/users/comments/{commentId}/approve").hasRole("ROLE_ADMIN")
-                            .requestMatchers(HttpMethod.POST, "/objects/").hasRole("ROLE_SELLER")
-                            .requestMatchers(HttpMethod.PUT, "/objects/{id}").hasRole("ROLE_SELLER")
-                            .requestMatchers(HttpMethod.DELETE, "/objects/{id}").hasRole("ROLE_SELLER")
-                            .requestMatchers(HttpMethod.POST, "/auth/{userId}/approve").hasRole("ROLE_ADMIN")
+                    request.requestMatchers(HttpMethod.PUT, "/users/comments/{commentId}/approve").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.POST, "/objects/").hasRole("SELLER")
+                            .requestMatchers(HttpMethod.PUT, "/objects/{id}").hasRole("SELLER")
+                            .requestMatchers(HttpMethod.DELETE, "/objects/{id}").hasRole("SELLER")
+                            .requestMatchers(HttpMethod.POST, "/auth/{userId}/approve").hasRole("ADMIN")
                             .anyRequest().permitAll();
 
 

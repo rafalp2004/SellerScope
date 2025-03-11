@@ -21,6 +21,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final ApplicationContext applicationContext;
+
     public JwtFilter(JwtService jwtService, ApplicationContext applicationContext) {
         this.jwtService = jwtService;
         this.applicationContext = applicationContext;
@@ -31,22 +32,30 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String email = null;
+        String userType = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            email = jwtService.extractEmail(token);
+            email = jwtService.extractSubject(token);
+            userType = jwtService.extractUserType(token);
 
         }
+        UserDetails userDetails = null;
 
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = applicationContext.getBean(MyUserDetailsService.class).loadUserByUsername(email);
+            if ("ANONYMOUS".equals(userType)) {
+                userDetails = applicationContext.getBean(MyUserDetailsService.class).loadByUserId(email);
+            } else {
+                userDetails = applicationContext.getBean(MyUserDetailsService.class).loadUserByUsername(email);
+            }
+
+
             if (jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-
             }
         }
         filterChain.doFilter(request, response);

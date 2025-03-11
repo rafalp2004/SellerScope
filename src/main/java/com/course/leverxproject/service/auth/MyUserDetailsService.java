@@ -2,15 +2,13 @@ package com.course.leverxproject.service.auth;
 
 import com.course.leverxproject.entity.User;
 import com.course.leverxproject.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class MyUserDetailsService implements CustomUserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -24,4 +22,11 @@ public class MyUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User with email " + email + " not found."));
         return new MyUserDetails(user);
     }
+
+    @Override
+    public UserDetails loadByUserId(String id) {
+        User user = userRepository.findById(Integer.parseInt(id)).orElseThrow(()->new UsernameNotFoundException("User with id " + id + " not found."));
+        return new MyUserDetails(user);
+    }
+
 }

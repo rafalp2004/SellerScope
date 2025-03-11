@@ -1,9 +1,6 @@
 package com.course.leverxproject.controller;
 
-import com.course.leverxproject.dto.comment.CommentCreateRequestDTO;
-import com.course.leverxproject.dto.comment.CommentResponseDTO;
-import com.course.leverxproject.dto.comment.CommentUpdateRequestDTO;
-import com.course.leverxproject.dto.comment.SellerAndCommentDTO;
+import com.course.leverxproject.dto.comment.*;
 import com.course.leverxproject.dto.user.UserResponseDTO;
 import com.course.leverxproject.service.auth.AuthService;
 import com.course.leverxproject.service.comment.CommentService;
@@ -34,16 +31,18 @@ public class CommentController {
     @PostMapping("{userId}/comments")
     public ResponseEntity<EntityModel<CommentResponseDTO>> createComment(
             @PathVariable int userId, @RequestBody CommentCreateRequestDTO commentDTO) {
-        CommentResponseDTO responseDTO = commentService.createComment(userId, commentDTO);
-        EntityModel<CommentResponseDTO> entityModel = EntityModel.of(
-                responseDTO,
-                linkTo(methodOn(CommentController.class).getComment(responseDTO.id())).withSelfRel(),
-                linkTo(methodOn(UserController.class).getSeller(userId)).withRel("user"),
+        CommentResponseWithTokenDTO responseDTO = commentService.createComment(userId, commentDTO);
+        EntityModel<CommentResponseDTO> resource = EntityModel.of(responseDTO.commentResponseDTO(),
+                linkTo(methodOn(CommentController.class).getComment(responseDTO.commentResponseDTO().id())).withSelfRel(),
+                linkTo(methodOn(UserController.class).getSeller(responseDTO.commentResponseDTO().id())).withRel("user"),
                 linkTo(methodOn(CommentController.class)
-                        .getComments(userId, 0, 10, "rate", "dsc"))
+                        .getComments(responseDTO.commentResponseDTO().id(), 0, 10, "rate", "dsc"))
                         .withRel("userComments")
         );
-        return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + responseDTO.token())
+                .body(resource);
+
     }
 
     @PutMapping("comments/{commentId}")
@@ -62,7 +61,6 @@ public class CommentController {
         return new ResponseEntity<>(entityModel, HttpStatus.CREATED);
     }
 
-    //TODO Only the author can delete
     @DeleteMapping("comments/{commentId}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable int commentId) {
@@ -108,7 +106,6 @@ public class CommentController {
 
     }
 
-    //TODO only for admins
     @PutMapping("/comments/{commentId}/approve")
     public ResponseEntity<Void> approveComment(@PathVariable int commentId) {
         commentService.approveComment(commentId);
@@ -121,16 +118,19 @@ public class CommentController {
             @RequestBody SellerAndCommentDTO sellerAndCommentDTO
     ) {
         UserResponseDTO userResponseDTO = authService.createSeller(sellerAndCommentDTO.sellerDTO());
-        CommentResponseDTO responseDTO = commentService.createComment(userResponseDTO.id(), sellerAndCommentDTO.commentDTO());
-        EntityModel<CommentResponseDTO> resource = EntityModel.of(responseDTO,
-                linkTo(methodOn(CommentController.class).getComment(responseDTO.id())).withSelfRel(),
+        CommentResponseWithTokenDTO responseDTO = commentService.createComment(userResponseDTO.id(), sellerAndCommentDTO.commentDTO());
+        EntityModel<CommentResponseDTO> resource = EntityModel.of(responseDTO.commentResponseDTO(),
+                linkTo(methodOn(CommentController.class).getComment(responseDTO.commentResponseDTO().id())).withSelfRel(),
                 linkTo(methodOn(UserController.class).getSeller(userResponseDTO.id())).withRel("user"),
                 linkTo(methodOn(CommentController.class)
                         .getComments(userResponseDTO.id(), 0, 10, "rate", "dsc"))
                         .withRel("userComments")
         );
-        return new ResponseEntity<>(resource, HttpStatus.CREATED);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + responseDTO.token())
+                .body(resource);
     }
-
-
 }
+
+
+
