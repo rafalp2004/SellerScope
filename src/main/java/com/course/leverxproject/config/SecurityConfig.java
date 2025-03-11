@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
 
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
     private final JwtFilter jwtFilter;
 
 
@@ -39,8 +39,13 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
-                    request.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                            .anyRequest().authenticated();
+                    request.requestMatchers(HttpMethod.PUT, "/users/comments/{commentId}/approve").hasRole("ROLE_ADMIN")
+                            .requestMatchers(HttpMethod.POST, "/objects/").hasRole("ROLE_SELLER")
+                            .requestMatchers(HttpMethod.PUT, "/objects/{id}").hasRole("ROLE_SELLER")
+                            .requestMatchers(HttpMethod.DELETE, "/objects/{id}").hasRole("ROLE_SELLER")
+                            .requestMatchers(HttpMethod.POST, "/auth/{userId}/approve").hasRole("ROLE_ADMIN")
+                            .anyRequest().permitAll();
+
 
                 })
                 .httpBasic(Customizer.withDefaults())
