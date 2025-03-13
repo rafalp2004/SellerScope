@@ -15,4 +15,6 @@ public interface AuthService {
     void approveSeller(int userId);
 
     LoginResponseDTO verify(LoginRequestDTO loginDTO);
+
+    UserResponseDTO verifyAccount(String email, String code);
 }
