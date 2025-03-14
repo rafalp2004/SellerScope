@@ -34,13 +34,9 @@ import java.util.Optional;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-
     private final UserRepository userRepository;
-
     private final AuthService authService;
-
     private final UserService userService;
-
     private final JwtService jwtService;
 
     public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository, AuthService authService, UserService userService, JwtService jwtService) {
@@ -149,7 +145,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void approveComment(int commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("Comment with id " + commentId + " not found."));
-
         comment.setApproved(true);
         commentRepository.save(comment);
         userService.updateAverage(comment.getSeller().getId());
