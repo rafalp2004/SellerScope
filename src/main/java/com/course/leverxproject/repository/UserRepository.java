@@ -21,10 +21,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
                              @Param("minRating") double minRating,
                              @Param("maxRating") double maxRating,
                              Pageable pageable);
+
     @Query("SELECT DISTINCT u FROM User u " +
             "JOIN u.roles r " +
             "WHERE u.rating BETWEEN :minRating AND :maxRating " +
             "AND r.name = 'ROLE_SELLER'")
     Page<User> findByRatingBetween(double minRating, double maxRating, Pageable pageable);
+
     Optional<User> findByEmail(String email);
 }

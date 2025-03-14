@@ -20,12 +20,10 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final RedisServiceImpl redisService;
 
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     @Value("${MAIL_USERNAME}")
     private String mailFrom;
@@ -114,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDTO verify(LoginRequestDTO loginRequestDTO) {
         User user = userRepository.findByEmail(loginRequestDTO.email()).orElseThrow(() -> new SellerNotFoundException("User with email " + loginRequestDTO.email() + " not found"));
-        if(!user.getEnabled()){
+        if (!user.getEnabled()) {
             throw new SellerNotEnabledException("Seller not enabled");
         }
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.password()));

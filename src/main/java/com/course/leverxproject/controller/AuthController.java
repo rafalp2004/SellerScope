@@ -58,10 +58,11 @@ public class AuthController {
 
         return new ResponseEntity<>(entityModel, HttpStatus.OK);
     }
+
     @GetMapping("/verify")
     ResponseEntity<EntityModel<UserResponseDTO>> verify(@RequestParam String email, @RequestParam String code) {
         UserResponseDTO userResponseDTO = authService.verifyAccount(email, code);
-        if(userResponseDTO==null){
+        if (userResponseDTO == null) {
             throw new VerificationException("Invalid or expired verification code.");
         }
         EntityModel<UserResponseDTO> entityModel = EntityModel.of(

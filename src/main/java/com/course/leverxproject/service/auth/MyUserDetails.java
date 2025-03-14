@@ -12,7 +12,7 @@ public class MyUserDetails implements UserDetails {
     private final User user;
 
     public MyUserDetails(User user) {
-    this.user = user;
+        this.user = user;
     }
 
     @Override
@@ -29,7 +29,8 @@ public class MyUserDetails implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
-    public int getId(){
+
+    public int getId() {
         return user.getId();
     }
 

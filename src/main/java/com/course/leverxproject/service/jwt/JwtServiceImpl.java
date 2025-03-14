@@ -23,8 +23,8 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private String secretKey = "";
     private final MyUserDetailsService myUserDetailsService;
+    private String secretKey = "";
 
     public JwtServiceImpl(MyUserDetailsService myUserDetailsService) {
         this.myUserDetailsService = myUserDetailsService;

@@ -55,14 +55,14 @@ public class User {
     @Column(name = "enabled")
     private Boolean enabled;
 
-    public User(String firstName, String lastName, String password, String email, LocalDateTime createdAt,Boolean approved,Boolean enabled, Set<Role> roles) {
+    public User(String firstName, String lastName, String password, String email, LocalDateTime createdAt, Boolean approved, Boolean enabled, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.email = email;
         this.createdAt = createdAt;
-        this.approved=approved;
-        this.enabled=enabled;
+        this.approved = approved;
+        this.enabled = enabled;
         this.roles = roles;
     }
 
