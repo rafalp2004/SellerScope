@@ -1,9 +1,6 @@
 package com.course.leverxproject.service.auth;
 
-import com.course.leverxproject.dto.user.LoginRequestDTO;
-import com.course.leverxproject.dto.user.LoginResponseDTO;
-import com.course.leverxproject.dto.user.UserCreateRequestDTO;
-import com.course.leverxproject.dto.user.UserResponseDTO;
+import com.course.leverxproject.dto.user.*;
 import com.course.leverxproject.entity.Role;
 import com.course.leverxproject.entity.User;
 import com.course.leverxproject.exception.role.RoleNotFoundException;
@@ -71,10 +68,7 @@ public class AuthServiceImpl implements AuthService {
 
         String verificationCode = UUID.randomUUID().toString();
         redisService.saveVerificationCode(seller.getEmail(), verificationCode);
-
         String verificationLink = "http://localhost:8080/auth/verify?email=" + seller.getEmail() + "&code=" + verificationCode;
-
-
         emailService.sendMail(
                 "Verification",
                 "Click this link to verify your account: " + verificationLink,
@@ -110,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponseDTO verify(LoginRequestDTO loginRequestDTO) {
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
         User user = userRepository.findByEmail(loginRequestDTO.email()).orElseThrow(() -> new SellerNotFoundException("User with email " + loginRequestDTO.email() + " not found"));
         if (!user.getEnabled()) {
             throw new SellerNotEnabledException("Seller not enabled");
@@ -138,6 +132,37 @@ public class AuthServiceImpl implements AuthService {
             user.setEnabled(true);
             userRepository.save(user);
             redisService.removeVerificationCode(email);
+            return new UserResponseDTO(
+                    user.getId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    user.getCreatedAt()
+            );
+        }
+        return null;
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        String verificationCode = UUID.randomUUID().toString();
+        redisService.saveVerificationCode(email + "pr", verificationCode);//Adding pr because we already use just email
+        emailService.sendMail(
+                "Recovery password",
+                "Your code for recovery password: " + verificationCode,
+                email,
+                mailFrom
+        );
+    }
+
+    @Override
+    public UserResponseDTO resetPassword(ResetPasswordDTO resetPasswordDTO) {
+        String storedCode = redisService.getVerificationCode(resetPasswordDTO.email() + "pr");
+        if (storedCode != null && storedCode.equals(resetPasswordDTO.code())) {
+            User user = userRepository.findByEmail(resetPasswordDTO.email()).orElseThrow(() -> new SellerNotFoundException("User with email " + resetPasswordDTO.email() + " not found"));
+            user.setPassword(encoder.encode(resetPasswordDTO.newPassword()));
+            userRepository.save(user);
+            redisService.removeVerificationCode(resetPasswordDTO.email() + "pr");
             return new UserResponseDTO(
                     user.getId(),
                     user.getFirstName(),

@@ -38,6 +38,7 @@ public class CommentServiceIntegralTests {
 
     @Autowired
     private CommentRepository commentRepository;
+
     @Autowired
     private RoleRepository roleRepository;
 
@@ -81,11 +82,6 @@ public class CommentServiceIntegralTests {
         seller.setFirstName("Jan");
         seller.setLastName("Kowalski");
         seller.setRoles(new HashSet<>(Collections.singleton(sellerRole)));
-        seller.setApproved(false);
-        seller.setEnabled(true);
-        seller.setEmail("JanKowalski@gmail.com");
-        seller.setCreatedAt(LocalDateTime.now());
-        seller.setPassword("TEST");
         seller = userRepository.save(seller);
 
         Comment comment = new Comment("Integration comment", (short) 3, null, seller, LocalDateTime.now(), false);

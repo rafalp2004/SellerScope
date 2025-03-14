@@ -1,9 +1,6 @@
 package com.course.leverxproject.controller;
 
-import com.course.leverxproject.dto.user.LoginRequestDTO;
-import com.course.leverxproject.dto.user.LoginResponseDTO;
-import com.course.leverxproject.dto.user.UserCreateRequestDTO;
-import com.course.leverxproject.dto.user.UserResponseDTO;
+import com.course.leverxproject.dto.user.*;
 import com.course.leverxproject.exception.user.VerificationException;
 import com.course.leverxproject.service.auth.AuthService;
 import com.course.leverxproject.service.redis.RedisService;
@@ -46,9 +43,29 @@ public class AuthController {
     }
     //TODO add verifying by email and changing password
 
+    @PostMapping("/forgot_password")
+    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordDTO forgotPasswordDTO) {
+        authService.forgotPassword(forgotPasswordDTO.email());
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<EntityModel<UserResponseDTO>> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
+        UserResponseDTO userResponseDTO = authService.resetPassword(resetPasswordDTO);
+        EntityModel<UserResponseDTO> entityModel = EntityModel.of(
+                userResponseDTO,
+                linkTo(methodOn(UserController.class).getSeller(userResponseDTO.id())).withSelfRel(),
+                linkTo(methodOn(UserController.class).getSellers(0, 10, "rating", "dsc", null, 0, 10))
+                        .withRel("sellers"));
+
+        return new ResponseEntity<>(entityModel, HttpStatus.OK);
+
+    }
+
     @PostMapping("/login")
     public ResponseEntity<EntityModel<LoginResponseDTO>> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-        LoginResponseDTO userResponseDTO = authService.verify(loginRequestDTO);
+        LoginResponseDTO userResponseDTO = authService.login(loginRequestDTO);
         EntityModel<LoginResponseDTO> entityModel = EntityModel.of(
                 userResponseDTO,
                 linkTo(methodOn(UserController.class).getSeller(userResponseDTO.id())).withSelfRel(),
