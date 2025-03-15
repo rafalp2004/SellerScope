@@ -3,6 +3,7 @@ package com.course.leverxproject.exception;
 import com.course.leverxproject.exception.comment.CommentNotFoundException;
 import com.course.leverxproject.exception.gameobject.GameObjectNotFoundException;
 import com.course.leverxproject.exception.role.RoleNotFoundException;
+import com.course.leverxproject.exception.user.SellerAlreadyExistException;
 import com.course.leverxproject.exception.user.SellerNotEnabledException;
 import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.exception.user.VerificationException;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 
@@ -67,6 +67,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(VerificationException.class)
     public ResponseEntity<ErrorResponse> handleVerificationException(VerificationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(SellerAlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> handleSellerAlreadyExistException(SellerAlreadyExistException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),

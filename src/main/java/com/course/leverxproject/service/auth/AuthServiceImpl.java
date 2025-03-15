@@ -4,6 +4,7 @@ import com.course.leverxproject.dto.user.*;
 import com.course.leverxproject.entity.Role;
 import com.course.leverxproject.entity.User;
 import com.course.leverxproject.exception.role.RoleNotFoundException;
+import com.course.leverxproject.exception.user.SellerAlreadyExistException;
 import com.course.leverxproject.exception.user.SellerNotEnabledException;
 import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.repository.RoleRepository;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,6 +53,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponseDTO createSeller(UserCreateRequestDTO userDTO) {
+        Optional<User> userOptional = userRepository.findByEmail(userDTO.email());
+
+        if (userOptional.isPresent()){
+            throw new SellerAlreadyExistException("User with email" + userDTO.email()+" already exists");
+        }
 
         Role role = roleRepository.findByName("ROLE_SELLER").orElseThrow(() -> new RoleNotFoundException("Role not found"));
         User seller = new User(
@@ -64,7 +71,6 @@ public class AuthServiceImpl implements AuthService {
                 Set.of(role)
         );
         seller.setEnabled(false);
-        userRepository.save(seller);
 
         String verificationCode = UUID.randomUUID().toString();
         redisService.saveVerificationCode(seller.getEmail(), verificationCode);
@@ -75,7 +81,9 @@ public class AuthServiceImpl implements AuthService {
                 seller.getEmail(),
                 mailFrom
         );
-        return new UserResponseDTO(seller.getId(), seller.getFirstName(), seller.getLastName(), seller.getEmail(), LocalDateTime.now());
+        userRepository.save(seller);
+        return new UserResponseDTO(seller.getId(), seller.getFirstName(), seller.getLastName(), seller.getEmail(), LocalDateTime.now(), seller.getRating(), seller.getApproved()
+        );
     }
 
     @Override
@@ -137,7 +145,9 @@ public class AuthServiceImpl implements AuthService {
                     user.getFirstName(),
                     user.getLastName(),
                     user.getEmail(),
-                    user.getCreatedAt()
+                    user.getCreatedAt(),
+                    user.getRating(),
+                    user.getApproved()
             );
         }
         return null;
@@ -168,7 +178,11 @@ public class AuthServiceImpl implements AuthService {
                     user.getFirstName(),
                     user.getLastName(),
                     user.getEmail(),
-                    user.getCreatedAt()
+                    user.getCreatedAt(),
+                    user.getRating(),
+                    user.getApproved()
+
+
             );
         }
         return null;

@@ -16,7 +16,6 @@ public class SecurityUtils {
         }
         Object principal = authentication.getPrincipal();
         if (principal instanceof MyUserDetails) {
-            log.info(((MyUserDetails) principal).getUser().toString());
             return Optional.of((MyUserDetails) principal);
         }
         return Optional.empty();
