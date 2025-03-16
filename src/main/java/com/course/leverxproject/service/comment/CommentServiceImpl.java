@@ -11,7 +11,7 @@ import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.repository.CommentRepository;
 import com.course.leverxproject.repository.UserRepository;
 import com.course.leverxproject.service.auth.AuthService;
-import com.course.leverxproject.service.auth.MyUserDetails;
+import com.course.leverxproject.entity.MyUserDetails;
 import com.course.leverxproject.service.jwt.JwtService;
 import com.course.leverxproject.service.user.UserService;
 import com.course.leverxproject.utils.SecurityUtils;

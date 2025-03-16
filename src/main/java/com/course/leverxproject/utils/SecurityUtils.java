@@ -1,6 +1,6 @@
 package com.course.leverxproject.utils;
 
-import com.course.leverxproject.service.auth.MyUserDetails;
+import com.course.leverxproject.entity.MyUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

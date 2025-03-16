@@ -1,7 +1,7 @@
 package com.course.leverxproject.filter;
 
 
-import com.course.leverxproject.service.auth.MyUserDetailsService;
+import com.course.leverxproject.service.myUser.MyUserDetailsService;
 import com.course.leverxproject.service.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

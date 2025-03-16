@@ -8,7 +8,7 @@ import com.course.leverxproject.entity.User;
 import com.course.leverxproject.repository.CommentRepository;
 import com.course.leverxproject.repository.UserRepository;
 import com.course.leverxproject.service.auth.AuthService;
-import com.course.leverxproject.service.auth.MyUserDetails;
+import com.course.leverxproject.entity.MyUserDetails;
 import com.course.leverxproject.service.comment.CommentServiceImpl;
 import com.course.leverxproject.service.jwt.JwtService;
 import com.course.leverxproject.service.user.UserService;
