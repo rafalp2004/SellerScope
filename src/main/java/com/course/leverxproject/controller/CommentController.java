@@ -4,6 +4,7 @@ import com.course.leverxproject.dto.comment.*;
 import com.course.leverxproject.dto.user.UserResponseDTO;
 import com.course.leverxproject.service.auth.AuthService;
 import com.course.leverxproject.service.comment.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class CommentController {
 
     @PostMapping("{userId}/comments")
     public ResponseEntity<EntityModel<CommentResponseDTO>> createComment(
-            @PathVariable int userId, @RequestBody CommentCreateRequestDTO commentDTO) {
+            @PathVariable int userId, @RequestBody @Valid CommentCreateRequestDTO commentDTO) {
         CommentResponseWithTokenDTO responseDTO = commentService.createComment(userId, commentDTO);
         EntityModel<CommentResponseDTO> resource = EntityModel.of(responseDTO.commentResponseDTO(),
                 linkTo(methodOn(CommentController.class).getComment(responseDTO.commentResponseDTO().id())).withSelfRel(),
@@ -48,7 +49,7 @@ public class CommentController {
     @PutMapping("comments/{commentId}")
     public ResponseEntity<EntityModel<CommentResponseDTO>> updateComment(
             @PathVariable int commentId,
-            @RequestBody CommentUpdateRequestDTO commentDTO) {
+            @RequestBody @Valid CommentUpdateRequestDTO commentDTO) {
         CommentResponseDTO responseDTO = commentService.updateComment(commentId, commentDTO);
         EntityModel<CommentResponseDTO> entityModel = EntityModel.of(
                 responseDTO,
@@ -115,7 +116,7 @@ public class CommentController {
     // Endpoint for creating user in case when createComment throw SellerNotFoundException
     @PostMapping("/comments/seller")
     public ResponseEntity<EntityModel<CommentResponseDTO>> createCommentAndSeller(
-            @RequestBody SellerAndCommentDTO sellerAndCommentDTO
+            @RequestBody @Valid SellerAndCommentDTO sellerAndCommentDTO
     ) {
         UserResponseDTO userResponseDTO = authService.createSeller(sellerAndCommentDTO.sellerDTO());
         CommentResponseWithTokenDTO responseDTO = commentService.createComment(userResponseDTO.id(), sellerAndCommentDTO.commentDTO());

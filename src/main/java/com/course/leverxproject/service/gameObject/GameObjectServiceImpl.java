@@ -9,7 +9,7 @@ import com.course.leverxproject.exception.gameobject.GameObjectNotFoundException
 import com.course.leverxproject.exception.user.SellerNotFoundException;
 import com.course.leverxproject.repository.GameObjectRepository;
 import com.course.leverxproject.repository.UserRepository;
-import com.course.leverxproject.service.auth.MyUserDetails;
+import com.course.leverxproject.entity.MyUserDetails;
 import com.course.leverxproject.utils.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

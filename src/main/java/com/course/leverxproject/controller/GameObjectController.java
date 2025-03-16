@@ -5,6 +5,7 @@ import com.course.leverxproject.dto.gameObject.GameObjectCreateRequestDTO;
 import com.course.leverxproject.dto.gameObject.GameObjectResponseDTO;
 import com.course.leverxproject.dto.gameObject.GameObjectUpdateRequestDTO;
 import com.course.leverxproject.service.gameObject.GameObjectService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -30,7 +31,7 @@ public class GameObjectController {
     }
 
     @PostMapping
-    private ResponseEntity<EntityModel<GameObjectResponseDTO>> createObject(@RequestBody GameObjectCreateRequestDTO gameDTO) {
+    private ResponseEntity<EntityModel<GameObjectResponseDTO>> createObject(@RequestBody @Valid GameObjectCreateRequestDTO gameDTO) {
         GameObjectResponseDTO responseDTO = gameObjectService.create(gameDTO);
         log.info(responseDTO.toString());
         EntityModel<GameObjectResponseDTO> entityModel = EntityModel.of(
@@ -43,7 +44,7 @@ public class GameObjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<GameObjectResponseDTO>> updateObject(@PathVariable int id, @RequestBody GameObjectUpdateRequestDTO gameDTO) {
+    public ResponseEntity<EntityModel<GameObjectResponseDTO>> updateObject(@PathVariable int id, @RequestBody @Valid GameObjectUpdateRequestDTO gameDTO) {
         GameObjectResponseDTO responseDTO = gameObjectService.update(id, gameDTO);
         EntityModel<GameObjectResponseDTO> entityModel = EntityModel.of(
                 responseDTO,

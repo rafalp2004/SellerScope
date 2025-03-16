@@ -8,7 +8,10 @@ public record UserResponseDTO(
         String firstName,
         String lastName,
         String email,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        double rating,
+        Boolean approved
+
 
 ) {
 }

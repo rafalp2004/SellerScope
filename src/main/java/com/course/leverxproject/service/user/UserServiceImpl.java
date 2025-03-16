@@ -23,13 +23,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final GameObjectRepository gameObjectRepository;
 
     public UserServiceImpl(UserRepository userRepository, UserRepository userRepository1, CommentRepository commentRepository, GameObjectRepository gameObjectRepository) {
         this.userRepository = userRepository1;
         this.commentRepository = commentRepository;
-        this.gameObjectRepository = gameObjectRepository;
-    }
+}
 
     @Override
     public void updateAverage(int userId) {
@@ -68,8 +66,9 @@ public class UserServiceImpl implements UserService {
                 seller.getFirstName(),
                 seller.getLastName(),
                 seller.getEmail(),
-                seller.getCreatedAt()
+                seller.getCreatedAt(),
+                seller.getRating(),
+                seller.getApproved()
         );
     }
-
 }

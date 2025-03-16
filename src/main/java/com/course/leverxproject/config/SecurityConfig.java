@@ -1,7 +1,6 @@
 package com.course.leverxproject.config;
 
 import com.course.leverxproject.filter.JwtFilter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,15 +18,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Slf4j
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     private final UserDetailsService userDetailsService;
     private final JwtFilter jwtFilter;
-
 
     public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;

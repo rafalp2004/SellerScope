@@ -19,7 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/sellers")
 public class UserController {
 
-    //Creating, updating seller and changing password is in AuthController
+    //Creating and changing password is in AuthController
     private final UserService userService;
 
     public UserController(UserService userService) {

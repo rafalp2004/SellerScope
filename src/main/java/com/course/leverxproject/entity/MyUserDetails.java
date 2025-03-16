@@ -1,6 +1,5 @@
-package com.course.leverxproject.service.auth;
+package com.course.leverxproject.entity;
 
-import com.course.leverxproject.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

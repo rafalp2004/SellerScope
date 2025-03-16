@@ -1,7 +1,7 @@
 package com.course.leverxproject.service.jwt;
 
-import com.course.leverxproject.service.auth.MyUserDetails;
-import com.course.leverxproject.service.auth.MyUserDetailsService;
+import com.course.leverxproject.entity.MyUserDetails;
+import com.course.leverxproject.service.myUser.MyUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

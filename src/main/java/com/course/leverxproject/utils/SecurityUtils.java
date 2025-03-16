@@ -1,6 +1,6 @@
 package com.course.leverxproject.utils;
 
-import com.course.leverxproject.service.auth.MyUserDetails;
+import com.course.leverxproject.entity.MyUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +16,6 @@ public class SecurityUtils {
         }
         Object principal = authentication.getPrincipal();
         if (principal instanceof MyUserDetails) {
-            log.info(((MyUserDetails) principal).getUser().toString());
             return Optional.of((MyUserDetails) principal);
         }
         return Optional.empty();

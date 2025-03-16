@@ -1,7 +1,8 @@
-package com.course.leverxproject.service.auth;
+package com.course.leverxproject.service.myUser;
 
 import com.course.leverxproject.entity.User;
 import com.course.leverxproject.repository.UserRepository;
+import com.course.leverxproject.entity.MyUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
