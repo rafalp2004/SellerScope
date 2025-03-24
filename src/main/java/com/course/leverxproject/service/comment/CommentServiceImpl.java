@@ -29,7 +29,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 public class CommentServiceImpl implements CommentService {
 

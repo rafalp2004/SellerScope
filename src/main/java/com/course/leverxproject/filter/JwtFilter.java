@@ -7,7 +7,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,11 +19,13 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final ApplicationContext applicationContext;
+    private final MyUserDetailsService myUserDetailsService;
 
-    public JwtFilter(JwtService jwtService, ApplicationContext applicationContext) {
+    public JwtFilter(JwtService jwtService, MyUserDetailsService myUserDetailsService) {
         this.jwtService = jwtService;
-        this.applicationContext = applicationContext;
+        this.myUserDetailsService = myUserDetailsService;
+
+
     }
 
     @Override
@@ -44,9 +45,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if ("ANONYMOUS".equals(userType)) {
-                userDetails = applicationContext.getBean(MyUserDetailsService.class).loadByUserId(email);
+                userDetails = myUserDetailsService.loadByUserId(email);
             } else {
-                userDetails = applicationContext.getBean(MyUserDetailsService.class).loadUserByUsername(email);
+                userDetails = myUserDetailsService.loadUserByUsername(email);
             }
 
 

@@ -70,7 +70,6 @@ public class AuthController {
                 linkTo(methodOn(UserController.class).getSellers(0, 10, "rating", "dsc", null, 0, 10))
                         .withRel("sellers"));
 
-
         return new ResponseEntity<>(entityModel, HttpStatus.OK);
     }
 

@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -70,7 +69,6 @@ public class AuthServiceImpl implements AuthService {
                 false,
                 Set.of(role)
         );
-        seller.setEnabled(false);
 
         String verificationCode = UUID.randomUUID().toString();
         redisService.saveVerificationCode(seller.getEmail(), verificationCode);

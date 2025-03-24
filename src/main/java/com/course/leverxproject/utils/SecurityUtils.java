@@ -7,7 +7,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-@Slf4j
 public class SecurityUtils {
     public static Optional<MyUserDetails> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

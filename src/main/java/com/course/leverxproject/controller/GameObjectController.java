@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Slf4j
 @RestController
 @RequestMapping("/objects")
 public class GameObjectController {
@@ -33,7 +32,6 @@ public class GameObjectController {
     @PostMapping
     private ResponseEntity<EntityModel<GameObjectResponseDTO>> createObject(@RequestBody @Valid GameObjectCreateRequestDTO gameDTO) {
         GameObjectResponseDTO responseDTO = gameObjectService.create(gameDTO);
-        log.info(responseDTO.toString());
         EntityModel<GameObjectResponseDTO> entityModel = EntityModel.of(
                 responseDTO,
                 linkTo(methodOn(GameObjectController.class).getObject(responseDTO.id())).withSelfRel(),

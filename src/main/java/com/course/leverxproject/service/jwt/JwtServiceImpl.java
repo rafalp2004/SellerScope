@@ -42,11 +42,8 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String generateToken(String email) {
 
-        Map<String, Object> claims = new HashMap<>();
-
         return Jwts.builder()
                 .claims()
-                .add(claims)
                 .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 600000))

@@ -17,15 +17,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
+
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserRepository userRepository1, CommentRepository commentRepository, GameObjectRepository gameObjectRepository) {
-        this.userRepository = userRepository1;
+    public UserServiceImpl(UserRepository userRepository, CommentRepository commentRepository) {
+        this.userRepository = userRepository;
         this.commentRepository = commentRepository;
 }
 
