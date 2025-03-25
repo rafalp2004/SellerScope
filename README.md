@@ -17,3 +17,9 @@ This project is an independent rating system for sellers of in-game items (CS:GO
 - **Administrator:** Manages user registrations, comment verifications, and overall content moderation.
 - **Seller:** Registers and manages their own profile, including password resets.
 - **Anonymous User:** Views seller profiles and submits comments.
+
+
+Cloud:
+https://seller-scope-service-balanced-wallaby-ai.cfapps.us10-001.hana.ondemand.com
+
+https://seller-scope-service-balanced-wallaby-ai.cfapps.us10-001.hana.ondemand.com/swagger-ui/index.html <- for endpoints
